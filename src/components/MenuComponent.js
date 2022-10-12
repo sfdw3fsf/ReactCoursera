@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Media } from 'reactstrap';
+
 
 
 // class Menu extends Component {
@@ -169,7 +169,7 @@ function Comment(props) {
         <Card >
             <CardBody class="fixcard">
                 <CardText>{comments.comment}</CardText>
-                <CardText>--{comments.author},{comments.date}</CardText>
+                <CardText>--{comments.author},{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comments.date)))}</CardText>
             </CardBody>
         </Card>
     ))
@@ -178,6 +178,17 @@ function Comment(props) {
         listcomments
 
     )
+}
+function RenderMenuItem ({dish, onClick}) {
+    return (
+        <Card
+            onClick={() => onClick(dish.id)}>
+            <CardImg width="100%" src={dish.image} alt={dish.name} />
+            <CardImgOverlay>
+                <CardTitle>{dish.name}</CardTitle>
+            </CardImgOverlay>
+        </Card>
+    );
 }
 
 
