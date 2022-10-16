@@ -1,131 +1,26 @@
-import React, { Component } from 'react';
+import { Card, CardImg, CardImgOverlay,
+    CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
+function RenderMenuItem ({dish, onClick}) {
+    return (
+        <Card>
+            <Link to={`/menu/${dish.id}`} >
+                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardImgOverlay>
+                    <CardTitle>{dish.name}</CardTitle>
+                </CardImgOverlay>
+            </Link>
+        </Card>
+    );
+}
 
+    const Menu = (props) => {
 
-// class Menu extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             dishes: [
-//                 {
-//                   id: 0,
-//                   name:'Uthappizza',
-//                   image: 'assets/images/uthappizza.png',
-//                   category: 'mains',
-//                   label:'Hot',
-//                   price:'4.99',
-//                   description:'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.'                        },
-//                {
-//                   id: 1,
-//                   name:'Zucchipakoda',
-//                   image: 'assets/images/zucchipakoda.png',
-//                   category: 'appetizer',
-//                   label:'',
-//                   price:'1.99',
-//                   description:'Deep fried Zucchini coated with mildly spiced Chickpea flour batter accompanied with a sweet-tangy tamarind sauce'                        },
-//                {
-//                   id: 2,
-//                   name:'Vadonut',
-//                   image: 'assets/images/vadonut.png',
-//                   category: 'appetizer',
-//                   label:'New',
-//                   price:'1.99',
-//                   description:'A quintessential ConFusion experience, is it a vada or is it a donut?'                        },
-//                {
-//                   id: 3,
-//                   name:'ElaiCheese Cake',
-//                   image: 'assets/images/elaicheesecake.png',
-//                   category: 'dessert',
-//                   label:'',
-//                   price:'2.99',
-//                   description:'A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms'                        }
-//                ],
-//         };
-//     }
-
-//     render() {
-//         const menu = this.state.dishes.map((dish) => {
-//             return (
-//               <div key={dish.id} className="col-12 mt-5">
-//                 <Media tag="li">
-//                   <Media left middle>
-//                       <Media object src={dish.image} alt={dish.name} />
-//                   </Media>
-//                   <Media body className="ml-5">
-//                     <Media heading>{dish.name}</Media>
-//                     <p>{dish.description}</p>
-//                   </Media>
-//                 </Media>
-//               </div>
-//             );
-//         });
-
-//         return (
-//           <div className="container">
-//             <div className="row">
-//               <Media list>
-//                   {menu}
-//               </Media>
-//             </div>
-//           </div>
-//         );
-//     }
-// }
-
-
-import {
-    Card, CardImg, CardImgOverlay, CardText, CardBody,
-    CardTitle
-} from 'reactstrap';
-
-class Menu extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            selectedDish: null
-        }
-    }
-
-    onDishSelect(dish) {
-        this.setState({ selectedDish: dish });
-    }
-
-    renderDish(dish) {
-        if (dish != null)
+        const menu = props.dishes.map((dish) => {
             return (
-                <DishDetailed image={dish.image} alt={dish.name} name={dish.name} description={dish.description} />
-
-            );
-        else
-            return (
-                <div></div>
-            );
-    }
-    renderComment(dish) {
-        if (dish != null)
-            return (
-                <><h3>Comments</h3><Comment cmt={dish.comments} /></>
-
-            );
-        else
-            return (
-                <div></div>
-            );
-    }
-
-    render() {
-        const menu = this.props.dishes.map((dish) => {
-            return (
-                <div className="col-12 col-md-5 m-1">
-                    <Card key={dish.id}
-                        onClick={() => this.onDishSelect(dish)}>
-                        <CardImg width="100%" src={dish.image} alt={dish.name} />
-                        <CardImgOverlay>
-                            <CardTitle>{dish.name}</CardTitle>
-                        </CardImgOverlay>
-                    </Card>
+                <div className="col-12 col-md-5 m-1"  key={dish.id}>
+                    <RenderMenuItem dish={dish} onClick={props.onClick} />
                 </div>
             );
         });
@@ -133,65 +28,20 @@ class Menu extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    {menu}
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>Menu</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>Menu</h3>
+                        <hr />
+                    </div>                
                 </div>
                 <div className="row">
-                    <div className="col-12 col-md-5 m-1">
-                        {this.renderDish(this.state.selectedDish)}
-                    </div>
-
-                    <div className="col-12 col-md-5 m-1">
-                        {this.renderComment(this.state.selectedDish)}
-                    </div>
+                    {menu}
                 </div>
             </div>
         );
     }
-}
-
-
-function DishDetailed(props) {
-    console.log(props)
-    return (
-        <Card>
-            <CardImg top src={props.image} alt={props.name} />
-            <CardBody>
-                <CardTitle>{props.name}</CardTitle>
-                <CardText>{props.description}</CardText>
-            </CardBody>
-        </Card>
-
-    )
-}
-function Comment(props) {
-
-    const listcomments = props.cmt.map((comments) => (
-        <Card >
-            <CardBody class="fixcard">
-                <CardText>{comments.comment}</CardText>
-                <CardText>--{comments.author},{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comments.date)))}</CardText>
-            </CardBody>
-        </Card>
-    ))
-    return (
-
-        listcomments
-
-    )
-}
-function RenderMenuItem ({dish, onClick}) {
-    return (
-        <Card
-            onClick={() => onClick(dish.id)}>
-            <CardImg width="100%" src={dish.image} alt={dish.name} />
-            <CardImgOverlay>
-                <CardTitle>{dish.name}</CardTitle>
-            </CardImgOverlay>
-        </Card>
-    );
-}
-
-
-
 
 export default Menu;
